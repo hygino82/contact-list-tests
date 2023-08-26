@@ -1,6 +1,9 @@
 package dev.hygino.services;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 
@@ -18,42 +21,42 @@ import dev.hygino.repositories.ContactRepository;
 
 public class ContactServiceImplTest {
 
-    @Mock
-    private ContactRepository contactRepository;
+	@Mock
+	private ContactRepository contactRepository;
 
-    @InjectMocks
-    private ContactServiceImpl contactService;
+	@InjectMocks
+	private ContactServiceImpl contactService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    @Test
-    public void testInsertContact() {
-        // Given
-        ContactInsertDTO dto = new ContactInsertDTO("Dilma", "dilma@opressora.net", "Linha Borges", "Coronel Vivida");
-        // Set properties on the DTO as needed
+	@Test
+	public void testInsertContact_Success() {
+		// Contato informado
+		ContactInsertDTO dto = new ContactInsertDTO("Dilma", "dilma@opressora.net", "Linha Borges", "Coronel Vivida");
+		// Set properties on the DTO as needed
 
-        // Create a sample entity that you expect to be returned by the repository
-        Contact expectedEntity = new Contact(dto);
-        expectedEntity.setCreateAt(Instant.now());
+		// Criação da entidade que vai receber os dados do dto
+		Contact expectedEntity = new Contact(dto);
+		expectedEntity.setCreateAt(Instant.now());
 
-        when(contactRepository.save(any(Contact.class))).thenReturn(expectedEntity);
+		when(contactRepository.save(any(Contact.class))).thenReturn(expectedEntity);
 
-        // When
-        ContactDTO resultDto = contactService.insert(dto);
+		// When
+		ContactDTO resultDto = contactService.insert(dto);
 
-        // Then
-        // Perform assertions on the resultDto or other expected behavior
-        // For example: assertEquals(expectedDto, resultDto);
-        // You can also verify interactions with the mock repository using Mockito's
-        // verify
-        verify(contactRepository, times(1)).save(any(Contact.class));
-        Assertions.assertEquals(dto.name(), resultDto.name());
-        Assertions.assertEquals(dto.address(), resultDto.address());
-        Assertions.assertEquals(dto.email(), resultDto.email());
-        Assertions.assertEquals(dto.city(), resultDto.city());
-        
-    }
+		// Then
+		// Perform assertions on the resultDto or other expected behavior
+		// For example: assertEquals(expectedDto, resultDto);
+		// You can also verify interactions with the mock repository using Mockito's
+		// verify
+		verify(contactRepository, times(1)).save(any(Contact.class));
+		Assertions.assertEquals("Dilma", resultDto.name());
+		Assertions.assertEquals("dilma@opressora.net", resultDto.email());
+		Assertions.assertEquals("Linha Borges", resultDto.address());
+		Assertions.assertEquals("Coronel Vivida", resultDto.city());
+
+	}
 }

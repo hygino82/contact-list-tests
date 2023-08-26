@@ -1,0 +1,4 @@
+INSERT INTO tb_contact(name,email,address,city,create_at) VALUES('Gorete Medeiros','goretinha@gmail.com','Barra Grande','Itapejara do Oeste',TIMESTAMP WITH TIME ZONE '2020-07-13T20:50:07.12345Z');
+INSERT INTO tb_contact(name,email,address,city,create_at) VALUES('Juvenal Bento','juvenal@gmail.com','Ilha Bela','Matinhos',TIMESTAMP WITH TIME ZONE '2023-07-03T18:53:07.12345Z');
+INSERT INTO tb_contact(name,email,address,city,create_at) VALUES('Alcides Poletto','alcides@gmail.com','Barra Velha','Esteio',TIMESTAMP WITH TIME ZONE '2023-06-19T20:50:07.12345Z');
+INSERT INTO tb_contact(name,email,address,city,create_at) VALUES('Renato Silva','renato@gmail.com','Bela Vista','Coronel Vivida',TIMESTAMP WITH TIME ZONE '2022-01-27T20:50:07.12345Z');
