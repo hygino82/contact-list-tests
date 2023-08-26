@@ -10,5 +10,7 @@ public interface ContactService {
     public ContactDTO insert(ContactInsertDTO dto);
 
 	public List<ContactDTO> findAll();
+
+	public ContactDTO findById(Long id);
     
 }
