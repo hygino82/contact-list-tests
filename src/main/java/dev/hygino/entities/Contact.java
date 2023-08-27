@@ -42,9 +42,18 @@ public class Contact {
         email = dto.email();
         address = dto.address();
         city = dto.city();
-    }
+    }  
 
-    public Long getId() {
+    public Contact(Long id, @NotBlank String name, @Email String email, @NotBlank String address,
+			@NotBlank String city) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+		this.city = city;
+	}
+
+	public Long getId() {
         return id;
     }
 

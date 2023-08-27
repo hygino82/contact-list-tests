@@ -11,6 +11,8 @@ import dev.hygino.dto.ContactDTO;
 import dev.hygino.dto.ContactInsertDTO;
 import dev.hygino.entities.Contact;
 import dev.hygino.repositories.ContactRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -43,5 +45,21 @@ public class ContactServiceImpl implements ContactService {
 			return new ContactDTO(optional.get());
 		}
 		throw new IllegalArgumentException("Não existe contato com o id " + id);
+	}
+
+	@Override
+	public ContactDTO update(Long id, @Valid ContactInsertDTO dto) {
+		try {
+			Contact entity = this.contactRepository.getReferenceById(id);
+			entity.setName(dto.name());
+			entity.setEmail(dto.email());
+			entity.setAddress(dto.address());
+			entity.setCity(dto.city());
+			entity.setUpdateAt(Instant.now());
+			entity = this.contactRepository.save(entity);
+			return new ContactDTO(entity);
+		} catch (EntityNotFoundException e) {
+			throw new IllegalArgumentException("Não existe contato com o id " + id);
+		}
 	}
 }

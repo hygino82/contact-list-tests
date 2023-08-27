@@ -1,11 +1,17 @@
 package dev.hygino.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +33,16 @@ public class ContactServiceImplTest {
 	@InjectMocks
 	private ContactServiceImpl contactService;
 
+	private Contact existingContact;
+	private Long existingId;
+	private Long nonExistingId;
+
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
+		existingContact = new Contact(1L, "Dilma", "dilma@opressora.net", "Linha Borges", "Coronel Vivida");
+		existingId = 1L;
+		nonExistingId = 100L;
 	}
 
 	@Test
@@ -57,6 +70,47 @@ public class ContactServiceImplTest {
 		Assertions.assertEquals("dilma@opressora.net", resultDto.email());
 		Assertions.assertEquals("Linha Borges", resultDto.address());
 		Assertions.assertEquals("Coronel Vivida", resultDto.city());
+	}
 
+	@Test
+	void testFindById_ExistingId() {
+		// Simulando o comportamento do repository quando um contato existe
+		when(contactRepository.findById(existingId)).thenReturn(Optional.of(existingContact));
+
+		ContactDTO result = contactService.findById(existingId);
+
+		assertNotNull(result);
+		// Verifique se o método findById do repositório foi chamado com o ID correto
+		verify(contactRepository).findById(existingId);
+	}
+
+	@Test
+	void testFindById_NonExistingId() {
+		// Simulando o comportamento do repository quando um contato não existe
+		when(contactRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			contactService.findById(nonExistingId);
+		});
+		// Verifique se o método findById do repositório foi chamado com o ID correto
+		verify(contactRepository).findById(nonExistingId);
+	}
+
+	@Test
+	void testFindAll() {
+		// Simulando uma lista de contatos do repository
+		List<Contact> mockContactList = new ArrayList<>();
+		mockContactList.add(new Contact(1L, "Nome 1", "Email 1", "Endereço 1", "Cidade 1"));
+		mockContactList.add(new Contact(2L, "Nome 2", "Email 2", "Endereço 2", "Cidade 2"));
+
+		when(contactRepository.findAll()).thenReturn(mockContactList);
+
+		List<ContactDTO> result = contactService.findAll();
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+
+		// Verifique se o método findAll do repositório foi chamado
+		verify(contactRepository).findAll();
 	}
 }

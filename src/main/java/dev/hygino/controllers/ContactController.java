@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.hygino.dto.ContactDTO;
 import dev.hygino.dto.ContactInsertDTO;
 import dev.hygino.services.ContactService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/contact")
@@ -26,7 +28,7 @@ public class ContactController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ContactDTO> insert(@RequestBody ContactInsertDTO dto) {
+	public ResponseEntity<ContactDTO> insert(@Valid @RequestBody ContactInsertDTO dto) {
 		ContactDTO result = this.service.insert(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
 	}
@@ -40,6 +42,12 @@ public class ContactController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ContactDTO> findById(@PathVariable("id") Long id) {
 		ContactDTO result = this.service.findById(id);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ContactDTO> update(@PathVariable("id") Long id, @RequestBody @Valid ContactInsertDTO dto) {
+		ContactDTO result = this.service.update(id, dto);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 }
